@@ -25,7 +25,7 @@ export default class Admin extends React.Component{
                        <Header/>
                         {/*中间内容区域*/}
                         <Row className="content">
-                          <Home/>
+                            {this.props.children}
                         </Row>
                         {/*底部Footer*/}
                         <Footer/>

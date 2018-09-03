@@ -1,11 +1,9 @@
-import React from 'react';
-
 export default {
     formatDate(time){
         if(!time) return '';
         let data=new Date(time);
         let year=data.getFullYear();
-        let month=data.getMonth();
+        let month=data.getMonth()+1;
         if(month<10){
              month='0'+month;
         }

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Admin from './Admin';
 import registerServiceWorker from './registerServiceWorker';
+import IRouter from "./IRouter";
 
-ReactDOM.render(<Admin />, document.getElementById('root'));
+ReactDOM.render(<IRouter />, document.getElementById('root'));
 registerServiceWorker();
