@@ -7,7 +7,12 @@ import Axios from './../../axios/index';
     Header组件结构
  */
 export default class Header extends React.Component{
-    state={}
+
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     componentWillMount() {
         this.setState({
             userName: '念阿郎'

@@ -1,4 +1,8 @@
+import {Select} from 'antd';
+import React from 'react';
+const Option=Select.Option;
 export default {
+    //日期处理
     formatDate(time){
         if(!time) return '';
         let data=new Date(time);
@@ -24,5 +28,31 @@ export default {
             second='0'+second;
         }
         return year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+    },
+    //分页处理
+    pagination(data,callback){
+        let page={
+            onChange:(current)=>{
+                callback(current)
+            },
+            current:data.page,
+            pageSize:data.page_size,
+            total:data.total_count,
+            showTotal:()=>{
+                return `共${data.total_count}条`
+            },
+            showQuickJumper:true
+        }
+        return page;
+    },
+    //option选择
+    getOptionList(data){
+        if(!data){
+            return [];
+        }
+        let options=[];
+        data.map((item,index)=>{
+            options.push(<Option value={item.id} key={item.id}>{item.name}</Option>)
+        })
     }
 }

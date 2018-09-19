@@ -9,15 +9,15 @@ const SubMenu = Menu.SubMenu;
     NavLeft组件结构，只展开当前父级菜单
  */
 export default class NavLeft extends React.Component{
-
-    state = {
-        theme:'dark',
+    //初始化
+    constructor(props) {
+        super(props);
+        this. state = {
+            theme:'dark',
+        };
     }
 
-   /* handleClick = (e) => {
-        console.log('click ', e);
-    }*/
-
+    //绑定生命周期钩子
     componentWillMount(){
         const menuTreeNode=this.renderMenu(MenuConfig);
         this.setState({
