@@ -12,123 +12,108 @@ import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
+
+import Axios from './../../../axios/index';
+
 export default class Bar extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            XData:[],
+            BeiData:[],
+            DongData:[],
+            YiData:[],
+        };
+    }
+
+    componentDidMount(){
+        this.requestList();//请求数据
+    }
+    //去后台获取数据
+    requestList=()=>{
+        let _this = this;
+        Axios.ajax({
+            url:'/telematis/adminDataStatistic/allDataByCondition',
+            data:{
+                area:'大连',
+                countTime:'month',
+                store_code:'2000',
+                stall_code:'3000'
+            }
+        },'post',false).then((res)=> {
+            let YData=[];
+            let BeiData=[];
+            let DongData=[];
+            let YiData=[];
+            res.map((item, index) => {
+                item.key = index;
+                let data=item.data;
+                let beijingHyundai=data.beijingHyundai;
+                let dongfengNissan=data.dongfengNissan;
+                let fAWVolkswagen=data.beijingHyundai;
+                if(beijingHyundai){
+                    BeiData.push(beijingHyundai);
+                }
+                if(dongfengNissan){
+                    DongData.push(dongfengNissan);
+                }
+                if(fAWVolkswagen){
+                    YiData.push(fAWVolkswagen);
+                } 
+                let result=item.result;
+                YData.push(result);
+            })
+            this.setState({
+                YData,
+                BeiData,
+                DongData,
+                YiData
+            })
+            //_this.request();//重新刷新
+        })
     }
 
     componentWillMount(){
         echarts.registerTheme('Telematics',echartTheme);
     }
 
-
     getOption(){
         let option = {
             title: {
-                text: '用户骑行订单'
-            },
-            tooltip : {
-                trigger: 'axis'
-            },
-            xAxis: {//x轴
-                data: [
-                    '周一',
-                    '周二',
-                    '周三',
-                    '周四',
-                    '周五',
-                    '周六',
-                    '周日'
-                ]
-            },
-            yAxis: {//y轴
-                type: 'value'
-            },
-            series: [//数据
-                {
-                    name: '订单量',
-                    type: 'bar',
-                    data: [
-                        1000,
-                        2000,
-                        1500,
-                        3000,
-                        2000,
-                        1200,
-                        800
-                    ]
-                }
-            ]
-        }
-        return option;
-    }
-
-    getOption2(){
-        let option = {
-            title: {
-                text: '用户骑行订单'
+                text: '销售柱形图'
             },
             tooltip : {
                 trigger: 'axis'
             },
             legend:{
-                data:['OFO','摩拜','小蓝']
+                data:[
+                    '北京现代',
+                    '东风日产',
+                    '一汽大众',
+                ]
             },
             xAxis: {
-                data: [
-                    '周一',
-                    '周二',
-                    '周三',
-                    '周四',
-                    '周五',
-                    '周六',
-                    '周日'
-                ]
+                data:this.state.YData
             },
             yAxis: {
                 type: 'value'
             },
             series: [
                 {
-                    name: 'OFO',
+                    name: '北京现代',
                     type: 'bar',
-                    data: [
-                        2000,
-                        3000,
-                        5500,
-                        7000,
-                        8000,
-                        12000,
-                        20000
-                    ]
+                    data:this.state.BeiData
                 },
                 {
-                    name: '摩拜',
+                    name: '东风日产',
                     type: 'bar',
-                    data: [
-                        1500,
-                        3000,
-                        4500,
-                        6000,
-                        8000,
-                        10000,
-                        15000
-                    ]
+                    data:this.state.DongData
                 },
                 {
-                    name: '小蓝',
+                    name: '一汽大众',
                     type: 'bar',
-                    data: [
-                        1000,
-                        2000,
-                        2500,
-                        4000,
-                        6000,
-                        7000,
-                        8000
-                    ]
+                    data:this.state.YiData
                 },
             ]
         }
@@ -137,18 +122,9 @@ export default class Bar extends React.Component{
     render(){
         return(
             <div>
-                <Card title="柱形图之一">
+                <Card title="各分销商销售柱形图" style={{marginTop:10}}>
                     <ReactEcharts
                         option={this.getOption()}
-                        theme="Telematics"
-                        notMerge={true}
-                        lazyUpdate={true}
-                        style={{ height: 500 }}
-                    />
-                </Card>
-                <Card title="柱形图表之二" style={{marginTop:10}}>
-                    <ReactEcharts
-                        option={this.getOption2()}
                         theme="Telematics"
                         notMerge={true}
                         lazyUpdate={true}

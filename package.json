@@ -100,5 +100,12 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+
+  "proxy":{
+    "/telematis":{
+      "target":"http://localhost:8080",
+      "changeOrigin":true
+    }
   }
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import {Button,Card,Form,Input,DatePicker,Table,Modal,message} from 'antd';
 import Axios from './../../axios/index';
-import './index.less'
+import './index.less';
+import Utils from './../../utils/utils';
 
 const FormItem=Form.Item;
 
@@ -16,7 +17,7 @@ class AdminInfo extends React.Component{
     }
 
     params = {
-
+        page: 1
     }
 
     componentDidMount(){
@@ -25,21 +26,27 @@ class AdminInfo extends React.Component{
 
     //去后台获取数据
     requestList=()=>{
+        let _this = this;
         Axios.ajax({
-            url:'/admin/findAllAdmin',
+            url:'/telematis/admin/findAllAdmin',
             data:{
-                param:{
-                    pageNum:1,
-                    pageSize:2
-                }
+                pageNum:this.params.page,
+                pageSize:10,
+                store_code:'2000',
             }
-        },'get',false).then((res)=> {
-            res.map((item, index) => {
+        },'post',false).then((res)=> {
+            let data=res.rows
+            data.map((item, index) => {
                 item.key = index;
             })
             this.setState({
-                dataSource:res
+                dataSource:data,
+                pagination: Utils.pagination(res, (current) => {
+                    _this.params.page = current;
+                    _this.requestList();
+                })
             })
+            //_this.request();//重新刷新
         })
     }
     //创建、删除
@@ -79,6 +86,7 @@ class AdminInfo extends React.Component{
 
     //用户提交触发的函数
     handleSubmit=()=>{
+        let _this = this;
         let type = this.state.type;//类型
         let data = this.userForm.props.form.getFieldsValue();//获取表单的值
         //发送请求
@@ -90,7 +98,7 @@ class AdminInfo extends React.Component{
                 }
             },'post',false).then((res)=>{
                 message.success(res);
-                this.request();//重新刷新
+                _this.request();//重新刷新
             })
         }
     }
@@ -98,24 +106,44 @@ class AdminInfo extends React.Component{
     render(){
         const columns=[
             {
-                title:'管理员id',
-                key:'admin_id',
-                dataIndex:'admin_id'
+                title:'店铺号',
+                key:'store_code',
+                dataIndex:'store_code'
             },
             {
-                title:'电话',
-                key:'admin_phone',
-                dataIndex:'admin_phone'
+                title:'店铺名字',
+                key:'store_name',
+                dataIndex:'store_name'
             },
             {
-                title:'密码',
+                title:'管理员姓名',
+                key:'admin_name',
+                dataIndex:'admin_name'
+            },
+            {
+                title:'管理员密码',
                 key:'admin_password',
                 dataIndex:'admin_password'
             },
             {
-                title:'邮件',
+                title:'角色id',
+                key:'role_id',
+                dataIndex:'role_id'
+            },
+            {
+                title:'角色名字',
+                key:'role_name',
+                dataIndex:'role_name'
+            },
+            {
+                title:'管理员email',
                 key:'admin_email',
                 dataIndex:'admin_email'
+            },
+            {
+                title:'创建时间',
+                key:'create_time',
+                dataIndex:'create_time'
             }
         ]
 
@@ -184,14 +212,16 @@ class AdminInfo extends React.Component{
                         </FormItem>
                     </Form>
 
-                    <Table
-                        style={{marginTop:10}}
-                        columns={columns}//表头
-                        dataSource={this.state.dataSource}//数据
-                        rowSelection={rowCheckSelection}//多选按钮
-                    />
+                    <div className="content-wrap">
+                        <Table
+                            style={{marginTop:10,padding:0}}
+                            columns={columns}//表头
+                            dataSource={this.state.dataSource}//数据
+                            rowSelection={rowCheckSelection}//多选按钮
+                            pagination={this.state.pagination}//分页
+                        />
+                    </div>
                 </Card>
-
                 {/*显示模态框*/}
                 <Modal
                     title={this.state.title}

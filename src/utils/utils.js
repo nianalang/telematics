@@ -35,16 +35,18 @@ export default {
             onChange:(current)=>{
                 callback(current)
             },
-            current:data.page,
-            pageSize:data.page_size,
-            total:data.total_count,
+            current:data.pageNum,
+            pageSize:data.pageSize,
+            total:data.total,
             showTotal:()=>{
-                return `共${data.total_count}条`
+                return `共${data.total}条`
             },
-            showQuickJumper:true
+            //showQuickJumper:true
         }
         return page;
     },
+
+
     //option选择
     getOptionList(data){
         if(!data){

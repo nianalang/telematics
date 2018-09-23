@@ -13,7 +13,7 @@ const menuList = [
             {
                 key:'1',
                 title: '信息管理',
-                router: '/admin/charts/bar'
+                router: '/admin/distInfo'
             }
         ]
     },
