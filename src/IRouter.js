@@ -7,6 +7,8 @@ import Home from "./pages/home";
 import AdminInfo from './pages/adminInfo/index'
 import DistInfo from './pages/distInfo/index';
 import Bar from './pages/echarts/bar/index';
+import Line from './pages/echarts/line/index';
+import Pie from './pages/echarts/pie/index';
 import './style/loading.less';
 /**
  * 登录页面
@@ -23,7 +25,9 @@ export default class IRouter extends React.Component{
                                 <Route path="/admin/home" component={Home}/>
                                 <Route path="/admin/adminInfo" component={AdminInfo}/>
                                 <Route path="/admin/distInfo" component={DistInfo}/>   
-                                <Route path="/admin/charts/bar" component={Bar}/>                                      
+                                <Route path="/admin/charts/bar" component={Bar}/>
+                                <Route path="/admin/charts/line" component={Line}/>
+                                <Route path="/admin/charts/pie" component={Pie}/>
                             </Admin>
                         }/>
                 </App>

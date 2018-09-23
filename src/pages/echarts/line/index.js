@@ -11,193 +11,131 @@ import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
+import Axios from "../../../axios";
 export default class Line extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            XData:[],
+            BeiData:[],
+            DongData:[],
+            YiData:[],
+            data:[],
+        };
+    }
+
+    componentDidMount(){
+        this.requestList();//请求数据
+    }
+    //去后台获取数据
+    requestList=()=>{
+        let _this = this;
+        Axios.ajax({
+            url:'/telematis/adminDataStatistic/allDataByArea',
+            data:{
+                countTime:'month',
+                store_code:'2000',
+                stall_code:'3000'
+            }
+        },'post',false).then((res)=> {
+            let YData=[];
+            let BeiData=[];
+            let DongData=[];
+            let YiData=[];
+            let dates;
+            res.map((item, index) => {
+                item.key = index;
+                let data=item.data;
+                dates=data;
+                let dongFengNumber=data.dongFengNumber;
+                let beiJingNumber=data.beiJingNumber;
+                let yiQiNumber=data.yiQiNumber;
+                if(dongFengNumber){
+                    DongData.push(beiJingNumber);
+                }
+                if(beiJingNumber){
+                    BeiData.push(dongFengNumber);
+                }
+                if(yiQiNumber){
+                    YiData.push(yiQiNumber);
+                }
+                let result=item.result;
+                YData.push(result);
+            })
+            this.setState({
+                YData,
+                BeiData,
+                DongData,
+                YiData,
+                dates,
+            })
+            //_this.request();//重新刷新
+        })
     }
 
     componentWillMount(){
-        echarts.registerTheme('Imooc',echartTheme);
+        echarts.registerTheme('Telematics',echartTheme);
     }
 
     getOption() {
         let option = {
             title: {
-                text: '用户骑行订单'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            xAxis: {
-                data: [
-                    '周一',
-                    '周二',
-                    '周三',
-                    '周四',
-                    '周五',
-                    '周六',
-                    '周日'
-                ]
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    name: '订单量',
-                    type: 'line',
-                    data: [
-                        1000,
-                        2000,
-                        1500,
-                        3000,
-                        2000,
-                        1200,
-                        800
-                    ]
-                }
-            ]
-        }
-        return option;
-    }
-
-    getOption2() {
-        let option = {
-            title: {
-                text: '用户骑行订单'
+                text: '销售折线图'
             },
             tooltip: {
                 trigger: 'axis'
             },
             legend:{
-                data:['OFO订单量','摩拜订单量']
+                data:[
+                '北京现代销售量',
+                '东风日产销售量',
+                '一汽大众销售量',
+            ]
             },
             xAxis: {
-                data: [
-                    '周一',
-                    '周二',
-                    '周三',
-                    '周四',
-                    '周五',
-                    '周六',
-                    '周日'
-                ]
+                data:this.state.YData
             },
             yAxis: {
                 type: 'value'
             },
             series: [
                 {
-                    name: 'OFO订单量',
+                    name: '北京现代销售量',
                     type: 'line',
                     stack: '总量',
-                    data: [
-                        1200,
-                        3000,
-                        4500,
-                        6000,
-                        8000,
-                        12000,
-                        20000
-                    ]
+                    data:this.state.BeiData
                 },
                 {
-                    name: '摩拜订单量',
+                    name: '东风日产销售量',
                     type: 'line',
                     stack: '总量',
-                    data: [
-                        1000,
-                        2000,
-                        5500,
-                        6000,
-                        8000,
-                        10000,
-                        12000
-                    ]
+                    data:this.state.DongData
+                },
+                {
+                    name: '一汽大众销售量',
+                    type: 'line',
+                    stack: '总量',
+                    data:this.state.YiData
                 },
             ]
         }
         return option;
     }
 
-    getOption3() {
-        let option = {
-            title: {
-                text: '用户骑行订单'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            xAxis: {
-                type:'category',
-                boundaryGap: false,
-                data: [
-                    '周一',
-                    '周二',
-                    '周三',
-                    '周四',
-                    '周五',
-                    '周六',
-                    '周日'
-                ]
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    name: '订单量',
-                    type: 'line',
-                    data: [
-                        1000,
-                        2000,
-                        1500,
-                        3000,
-                        2000,
-                        1200,
-                        800
-                    ],
-                    areaStyle: {}
-                }
-            ]
-        }
-        return option;
-    }
 
     render() {
         return (
             <div>
-                <Card title="折线图表之一">
+                <Card title="分销商销售折线图" style={{marginTop:10}}>
                     <ReactEcharts
                         option={this.getOption()}
-                        theme="Imooc"
+                        theme="Telematics"
                         notMerge={true}
                         lazyUpdate={true}
                         style={{
-                        height: 500
-                    }}/>
-                </Card>
-                <Card title="折线图表之二" style={{marginTop:10}}>
-                    <ReactEcharts
-                        option={this.getOption2()}
-                        theme="Imooc"
-                        notMerge={true}
-                        lazyUpdate={true}
-                        style={{
-                        height: 500
-                    }}/>
-                </Card>
-                <Card title="折线图表之三" style={{marginTop:10}}>
-                    <ReactEcharts
-                        option={this.getOption3()}
-                        theme="Imooc"
-                        notMerge={true}
-                        lazyUpdate={true}
-                        style={{
-                        height: 500
-                    }}/>
+                            height: 500
+                        }}/>
                 </Card>
             </div>
         );
