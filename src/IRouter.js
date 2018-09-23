@@ -9,6 +9,8 @@ import DistInfo from './pages/distInfo/index';
 import Bar from './pages/echarts/bar/index';
 import Line from './pages/echarts/line/index';
 import Pie from './pages/echarts/pie/index';
+import Permission from'./pages/permission/index';
+
 import './style/loading.less';
 /**
  * 登录页面
@@ -28,6 +30,8 @@ export default class IRouter extends React.Component{
                                 <Route path="/admin/charts/bar" component={Bar}/>
                                 <Route path="/admin/charts/line" component={Line}/>
                                 <Route path="/admin/charts/pie" component={Pie}/>
+                                <Route path="/admin/permission" component={Permission}/>
+
                             </Admin>
                         }/>
                 </App>

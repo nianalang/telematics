@@ -103,7 +103,7 @@ export default class DistInfo extends React.Component{
                 dataIndex:'create_time'
             }
         ]
-        
+
         const selectedRowKeys=this.state.selectedRowKeys;
         const rowCheckSelection={
             type:'checkbox',
