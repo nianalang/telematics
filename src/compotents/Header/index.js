@@ -3,10 +3,12 @@ import { Row, Col} from 'antd';
 import './index.less';
 import Util from './../../utils/utils'
 import Axios from './../../axios/index';
+import {connect} from 'react-redux';
+
 /*
     Header组件结构
  */
-export default class Header extends React.Component{
+class Header extends React.Component{
 
     constructor(props) {
         super(props);
@@ -55,7 +57,7 @@ export default class Header extends React.Component{
                 </Row>
                 <Row className="breadcrumb">
                     <Col span={4}  className="breadcrumb-title">
-                        首页
+                        {this.props.menuName}
                     </Col>
                     <Col span={20} className="weather">
                         <span className="weather-title">{this.state.sysTime}</span>
@@ -71,3 +73,11 @@ export default class Header extends React.Component{
         );
     }
 }
+
+const maptateToProps=state=>{
+    return{
+        menuName:state.menuName
+    }
+}
+
+export default connect(maptateToProps)(Header);

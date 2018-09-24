@@ -4,24 +4,41 @@ import MenuConfig from './../../config/menuConfig';
 import './index.less';
 import {NavLink} from 'react-router-dom';
 
+import {connect} from 'react-redux';
+import {switchMenu} from './../../redux/action/index';
+
 const SubMenu = Menu.SubMenu;
 /*
     NavLeft组件结构，只展开当前父级菜单
  */
-export default class NavLeft extends React.Component{
+class NavLeft extends React.Component{
     //初始化
     constructor(props) {
         super(props);
         this. state = {
             theme:'dark',
+            //currentKey:'/admin/home'
         };
     }
+
+    handleClick=({item})=>{
+         // 事件派发，自动调用reducer，通过reducer保存到store对象中
+         const { dispatch } = this.props;
+         console.log(item.props);
+         if(item.props.parentMenu.props.title){
+             dispatch(switchMenu(`${item.props.parentMenu.props.title} / ${item.props.title}`));
+         }else{
+             dispatch(switchMenu(item.props.title));
+         }
+}
 
     //绑定生命周期钩子
     componentWillMount(){
         const menuTreeNode=this.renderMenu(MenuConfig);
+        //let currentKey=window.location.hash.replace('/#|\?.*$/g','');
         this.setState({
-            menuTreeNode
+            menuTreeNode,
+            //currentKey
         })
     }
 
@@ -53,10 +70,17 @@ export default class NavLeft extends React.Component{
                     <h1> 车联网后台系统</h1>
                 </div>
 
-                <Menu theme={this.state.theme} mode="inline">
+                <Menu 
+                theme={this.state.theme} 
+                mode="inline"
+                onClick={this.handleClick}
+                //selectedKeys={this.state.currentKey}
+                >
                     {this.state.menuTreeNode}
                 </Menu>
             </div>
         );
     }
 }
+
+export default  connect()(NavLeft);
