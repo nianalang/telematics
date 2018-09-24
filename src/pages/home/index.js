@@ -18,12 +18,13 @@ export default class Home extends React.Component{
     componentDidMount() {
         this.createMap();
     }
+
+    //初始化地图
     createMap = () => {
         const myChart = echarts.init(document.getElementById('map'));
         const option = {
             title : {
-                text: 'iphone销量',
-                subtext: '纯属虚构',
+                text: '车辆销售区域',
                 left: 'center'
             },
             tooltip : {
@@ -32,7 +33,7 @@ export default class Home extends React.Component{
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data:['iphone3','iphone4','iphone5']
+                data:['北京现代','东风日产','一汽大众']
             },
             visualMap: {
                 min: 0,
@@ -56,7 +57,7 @@ export default class Home extends React.Component{
             },
             series : [
                 {
-                    name: 'iphone3',
+                    name: '北京现代',
                     type: 'map',
                     mapType: 'china',
                     roam: false,
@@ -106,7 +107,7 @@ export default class Home extends React.Component{
                     ]
                 },
                 {
-                    name: 'iphone4',
+                    name: '东风日产',
                     type: 'map',
                     mapType: 'china',
                     label: {
@@ -140,7 +141,7 @@ export default class Home extends React.Component{
                     ]
                 },
                 {
-                    name: 'iphone5',
+                    name: '一汽大众',
                     type: 'map',
                     mapType: 'china',
                     label: {
