@@ -95,8 +95,8 @@ export default class Axios{
                             })
                         }
                     }else{
-                        let res=response.data
                         console.log(res);
+                        let res=response.data
                         resolve(res)//返回数据
                     }
                     

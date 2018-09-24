@@ -3,6 +3,12 @@ import {Form,Input,Button,message,Icon,Checkbox} from 'antd';
 import  './index.less';
 import Footer from './../../compotents/Footer/index';
 import Axios from './../../axios/index'
+
+import { Redirect } from 'react-router-dom';
+
+import {connect} from 'react-redux';
+import {login} from './../../redux/action';
+
 const FormItem=Form.Item;
 
 /**
@@ -10,26 +16,42 @@ const FormItem=Form.Item;
  */
 class Login extends React.Component{
 
+    state={
+        logined:false
+    }
+
     handleSubmit=()=>{
+        let _this=this;
         let userInfo=this.props.form.getFieldsValue();
         //校验字段
         this.props.form.validateFields((error,valus)=>{
             if(!error){//校验成功
-                let admin_phone=userInfo.userName;
+                let admin_name=userInfo.userName;
                 let admin_password=userInfo.password;
                 //message.success(`${userInfo.userName}登陆成功，密码为${userInfo.password}`)
                 Axios.ajax(
                     {
-                        url:'/admin/findAdmin',
+                        url:'/telematis/admin/findAdmin',
                         data:{
-                            admin_phone,
+                            admin_name,
                             admin_password
                         }
                     },
                     'post',false).then((res)=>{
                     let stateInfo=res.stateInfo;
-                    message.success(stateInfo);
+
+                    const { dispatch } = _this.props;
+                    let admin=res.admin;
                     //页面跳转
+                    let distributor=res.distributor;
+                    if(admin){
+                        dispatch(login(admin));
+                    }else{
+                        dispatch(login(distributor));
+                    }
+                    message.success(stateInfo);
+
+                    this.setState({logined: true});
                 })
             }
         })
@@ -37,6 +59,12 @@ class Login extends React.Component{
 
     render(){
         const  {getFieldDecorator}=this.props.form;
+        if(this.state.logined) {
+            return (
+                <Redirect to="/admin/home"/>
+            )
+        }
+
         return(
             <div className="login-page">
                 <div className="login-header">
@@ -59,13 +87,14 @@ class Login extends React.Component{
                                                 required:true,
                                                 message:'用户名不能为空'
                                             },{
-                                                min:4,
+                                                min:3,
                                                 max:18,
                                                 message:'长度不在范围内'
-                                            },{
-                                                pattern:/^\w+$/g,
-                                                message:'用户名必须为字母或数字'
-                                            }
+                                            },
+                                            // {
+                                            //     pattern:/^\w+$/g,
+                                            //     message:'用户名必须为字母或数字'
+                                            // }
                                         ]
                                     })(
                                         <Input prefix={<Icon type="user"/>} placeholder="请输入用户名"/>
@@ -116,4 +145,7 @@ class Login extends React.Component{
         );
     }
 }
-export default Form.create()(Login)
+Login=  Form.create()(Login);
+
+export default connect() (Login);
+

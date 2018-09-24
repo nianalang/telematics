@@ -12,33 +12,37 @@ const SubMenu = Menu.SubMenu;
     NavLeft组件结构，只展开当前父级菜单
  */
 class NavLeft extends React.Component{
+
     //初始化
     constructor(props) {
         super(props);
         this. state = {
             theme:'dark',
-            //currentKey:'/admin/home'
+            currentKey:'sub1'
         };
     }
 
-    handleClick=({item})=>{
+    handleClick=({item, key })=>{
+        if (key == this.state.currentKey) {
+            return false;
+        }
          // 事件派发，自动调用reducer，通过reducer保存到store对象中
          const { dispatch } = this.props;
-         console.log(item.props);
          if(item.props.parentMenu.props.title){
              dispatch(switchMenu(`${item.props.parentMenu.props.title} / ${item.props.title}`));
          }else{
              dispatch(switchMenu(item.props.title));
          }
+        this.setState({
+            currentKey: key
+        });
 }
 
     //绑定生命周期钩子
     componentWillMount(){
         const menuTreeNode=this.renderMenu(MenuConfig);
-        //let currentKey=window.location.hash.replace('/#|\?.*$/g','');
         this.setState({
             menuTreeNode,
-            //currentKey
         })
     }
 
@@ -74,7 +78,7 @@ class NavLeft extends React.Component{
                 theme={this.state.theme} 
                 mode="inline"
                 onClick={this.handleClick}
-                //selectedKeys={this.state.currentKey}
+                defaultSelectedKeys={this.state.currentKey}
                 >
                     {this.state.menuTreeNode}
                 </Menu>

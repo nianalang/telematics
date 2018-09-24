@@ -1,9 +1,10 @@
 import React from 'react';
-import { Row, Col} from 'antd';
+import { Row, Col,Modal} from 'antd';
 import './index.less';
 import Util from './../../utils/utils'
 import Axios from './../../axios/index';
 import {connect} from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 /*
     Header组件结构
@@ -12,14 +13,24 @@ class Header extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            userName:'',
+            showModal:false,
+            redirect:false
+        };
     }
 
     componentWillMount() {
-        this.setState({
-            userName: '念阿郎'
-        })
-
+        const {admin_name,dist_name}=this.props;
+        if(admin_name){//管理员登陆
+            this.setState({
+                userName:admin_name
+            })
+        }else{
+            this.setState({
+                userName:dist_name
+            })
+        }
         setInterval(() => {
             let sysTime = Util.formatDate(new Date().getTime());
             this.setState({
@@ -46,13 +57,25 @@ class Header extends React.Component{
         })
     }
 
+    handleClick=()=>{
+        this.setState({
+            showModal:true
+        })
+    }
+
     render(){
+        if(this.state.redirect) {
+            return (
+                <Redirect to="/login"/>
+            )
+        }
         return(
             <div className="header">
                 <Row className="header-top">
                     <Col span={24}>
                         <span>欢迎您，{this.state.userName}</span>
-                        <a href="##" alt="">退出</a>
+                        {/*<NavLink to='/login'>退出</NavLink>*/}
+                        <a onClick={this.handleClick}>退出</a>
                     </Col>
                 </Row>
                 <Row className="breadcrumb">
@@ -69,6 +92,24 @@ class Header extends React.Component{
                         </span>
                     </Col>
                 </Row>
+
+                <Modal
+                    title="确认框"
+                    visible={this.state.showModal}
+                    onCancel={()=>{
+                        this.setState({
+                            showModal:false
+                        })
+                    }}
+                    onOk={()=>{
+                        this.setState({
+                            showModal:false,
+                            redirect:true,
+                        })
+                    }}
+                >
+                    <p>确定要退出吗</p>
+                </Modal>
             </div>
         );
     }
@@ -76,7 +117,9 @@ class Header extends React.Component{
 
 const maptateToProps=state=>{
     return{
-        menuName:state.menuName
+        menuName:state.menuName,
+        admin_name:state.admin_name,
+        dist_name:state.dist_name,
     }
 }
 
