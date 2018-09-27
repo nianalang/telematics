@@ -121,16 +121,16 @@ export default class DistInfo extends React.Component{
                 <Card style={{marginTop:10}}>
                     <Form layout="inline">
                         <FormItem>
-                            <Button type="primary"  className="button" onClick={()=>this.handleOperator('create')}>创建管理员</Button>
+                            <Button type="primary"  className="button" onClick={()=>this.handleOperator('create')}>创建分销商</Button>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary"  className="button" onClick={()=>this.handleOperator('edit')}>编辑管理员</Button>
+                            <Button type="primary"  className="button" onClick={()=>this.handleOperator('edit')}>编辑分销商</Button>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary"  className="button" onClick={()=>this.handleOperator('detail')}>管理员详情</Button>
+                            <Button type="primary"  className="button" onClick={()=>this.handleOperator('detail')}>分销商详情</Button>
                         </FormItem>
                         <FormItem>
-                            <Button type="danger"  className="button" onClick={()=>this.handleOperator('delete')}>删除管理员</Button>
+                            <Button type="danger"  className="button" onClick={()=>this.handleOperator('delete')}>删除分销商</Button>
                         </FormItem>
                     </Form>
 
